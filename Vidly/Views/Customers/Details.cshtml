@@ -7,10 +7,10 @@
 
 <h2>Details</h2>
 <p>@Model.Name</p>
-<p>@Model.MembershipType.Name</p>
+<p>Membership type: @Model.MembershipType.Name</p>
 @if (Model.DateOfBirth.HasValue)
 {
-    <p>@Model.DateOfBirth</p>
+    <p>Birthday: @Model.DateOfBirth</p>
 
 }
 
