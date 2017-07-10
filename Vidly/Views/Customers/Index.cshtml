@@ -22,6 +22,7 @@ else
         <th>
             @Html.DisplayNameFor(model => model.Name)
         </th>
+        <th>Membership Type</th>
         <th> Discount Rate </th>
         <th></th>
     </tr>
@@ -31,6 +32,7 @@ else
         <td>
             @Html.DisplayFor(modelItem => customer.Name)
         </td>
+        <td>@customer.MembershipType.Name</td>
         <td>@customer.MembershipType.DiscountRate%</td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=customer.Id }) |
