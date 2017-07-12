@@ -43,7 +43,14 @@ namespace Vidly.Controllers
 
         public ActionResult Edit(int id)
         {
-            return Content("Id: " + id);
+            var movie = _context.Movies.SingleOrDefault(m => m.Id == id);
+            if (movie == null)
+                return HttpNotFound();
+            var movieFormViewModel = new MovieFormViewModel(movie)
+            {
+                GenreTypes = _context.Genres.ToList()
+            };
+            return View("MovieForm", movieFormViewModel);
         }
 
         public ActionResult Index(int? pageIndex, string sortBy)
@@ -59,6 +66,45 @@ namespace Vidly.Controllers
             var movies = _context.Movies.Include(m => m.Genre).ToList();
 
             return View(movies);
+        }
+
+        public ActionResult Create()
+        {
+            var movieFormViewModel = new MovieFormViewModel
+            {
+                GenreTypes = _context.Genres.ToList()
+            };
+            return View("MovieForm", movieFormViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Save(Movie movie)
+        {
+            if (!ModelState.IsValid)
+            {
+                var viewModel = new MovieFormViewModel(movie)
+                {
+                    GenreTypes = _context.Genres.ToList()
+                };
+                return View("MovieForm", viewModel);
+            }
+
+            if (movie.Id == 0)
+            {
+                movie.DateAdded = DateTime.Now;
+                _context.Movies.Add(movie);
+            }else
+            {
+                var movieInDB = _context.Movies.Single(m => m.Id == movie.Id);
+                movieInDB.Name = movie.Name;
+                movieInDB.NumberInStock = movie.NumberInStock;
+                movieInDB.ReleaseDate = movie.ReleaseDate;
+                movieInDB.GenreId = movie.GenreId;
+            }
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Movies");
         }
 
         public ActionResult Details(int id)
