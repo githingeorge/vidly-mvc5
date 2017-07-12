@@ -23,7 +23,7 @@ namespace Vidly.Controllers.Api
         }
 
         // GET /api/customers/1
-        public Customer GetCustomer(int id
+        public Customer GetCustomer(int id)
         {
             var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
 
